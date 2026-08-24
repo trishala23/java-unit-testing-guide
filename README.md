@@ -5,6 +5,9 @@ A beginner-to-advanced, hands-on guide to writing Java unit tests with
 common style of mocking, verification, spies, and the git/PR workflow for
 shipping test changes.
 
+📖 **[Read it as a website →](https://trishala23.github.io/java-unit-testing-guide/)**
+(hosted on GitHub Pages, built from the same `docs/*.md` chapters below)
+
 Every concept in the docs has a matching, runnable test class in
 [`src/test/java`](src/test/java/com/example/guide) — read the doc, then open
 the file it points to and run it yourself.
@@ -39,6 +42,29 @@ you already know the basics and want a specific technique.
 | 10 | [Git workflow for test changes](docs/10-git-workflow.md) | Branch-per-change, commit hygiene, running tests locally | — |
 | 11 | [Pull request guide](docs/11-pr-guide.md) | PR checklist, review etiquette, CI expectations | — |
 
+## The tutorial website
+
+`docs/*.md` is the single source of truth for content. The site under
+[trishala23.github.io/java-unit-testing-guide](https://trishala23.github.io/java-unit-testing-guide/)
+is generated from it by [`scripts/build_site.py`](scripts/build_site.py) —
+a dependency-light Python script (needs only the `markdown` package) that
+turns each chapter into a styled HTML page with sidebar navigation, an
+on-page table of contents, syntax-highlighted code, and light/dark themes.
+
+It rebuilds and redeploys automatically via
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml) on every push
+to `main` that touches `docs/`, `assets/`, or the build script — so editing
+a chapter's markdown is enough; there's nothing to hand-regenerate.
+
+To preview it locally:
+
+```bash
+pip install -r scripts/requirements.txt
+python scripts/build_site.py
+python -m http.server 8000 --directory _site
+# open http://localhost:8000
+```
+
 ## Project structure
 
 ```
@@ -52,7 +78,10 @@ src/test/java/com/example/guide/
   mockito/   Mocking styles, verification, spies
   advanced/  Exceptions, static mocking, BDD style
 
-docs/        The numbered guide chapters above
+docs/        The numbered guide chapters above (source of truth for the tutorial site)
+assets/      CSS/JS/favicon for the tutorial site
+scripts/     build_site.py — renders docs/*.md into the static site
+.github/workflows/pages.yml   Builds & deploys the site to GitHub Pages on every push to main
 ```
 
 ## Running a single test class
