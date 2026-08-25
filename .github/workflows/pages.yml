@@ -39,6 +39,11 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # This repo has never had GitHub Pages enabled before, so ask
+          # configure-pages to create the Pages site (build_type: workflow)
+          # instead of just failing with "Get Pages site failed. Not Found".
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
