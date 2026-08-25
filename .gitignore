@@ -1,0 +1,12 @@
+target/
+*.class
+_site/
+__pycache__/
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+*.log
+.DS_Store

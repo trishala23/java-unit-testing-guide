@@ -1,0 +1,97 @@
+# Java Unit Testing Guide
+
+A beginner-to-advanced, hands-on guide to writing Java unit tests with
+**JUnit 5** and **Mockito** — covering assertions, test structure, every
+common style of mocking, verification, spies, and the git/PR workflow for
+shipping test changes.
+
+📖 **[Read it as a website →](https://trishala23.github.io/java-unit-testing-guide/)**
+(hosted on GitHub Pages, built from the same `docs/*.md` chapters below)
+
+Every concept in the docs has a matching, runnable test class in
+[`src/test/java`](src/test/java/com/example/guide) — read the doc, then open
+the file it points to and run it yourself.
+
+## Quick start
+
+```bash
+git clone <this-repo>
+cd java-unit-testing-guide
+mvn test
+```
+
+Requires JDK 17+ and Maven. All 48 example tests should pass (one is
+intentionally `@Disabled` to demonstrate the annotation).
+
+## How to use this guide
+
+Read in order if you're new to Java testing; jump directly to a chapter if
+you already know the basics and want a specific technique.
+
+| # | Guide | What you'll learn | Example test class |
+|---|-------|--------------------|---------------------|
+| 1 | [Getting started with JUnit 5](docs/01-beginner-junit5.md) | `@Test`, lifecycle hooks, `@Nested`, `@DisplayName`, running tests | [`CalculatorTest`](src/test/java/com/example/guide/beginner/CalculatorTest.java) |
+| 2 | [Assertions with AssertJ](docs/02-assertions-assertj.md) | Fluent assertions, exceptions, collections | [`CalculatorTest`](src/test/java/com/example/guide/beginner/CalculatorTest.java) |
+| 3 | [Parameterized & advanced JUnit 5](docs/03-junit5-parameterized.md) | `@ParameterizedTest`, tags, assumptions, timeouts | [`JUnit5FeaturesTest`](src/test/java/com/example/guide/beginner/JUnit5FeaturesTest.java) |
+| 4 | [Mockito basics: your first mock](docs/04-mockito-basics.md) | Why mock, `@Mock`, stubbing with `when()` | [`UserServiceMockitoBasicsTest`](src/test/java/com/example/guide/mockito/UserServiceMockitoBasicsTest.java) |
+| 5 | [Different ways of mocking](docs/05-mocking-styles.md) | `Mockito.mock()`, `@Mock`, `@InjectMocks`, deep stubs, lenient mode | [`MockingStylesTest`](src/test/java/com/example/guide/mockito/MockingStylesTest.java) |
+| 6 | [Verification](docs/06-verification.md) | `verify()`, `times()`, `InOrder`, `ArgumentCaptor`, `verifyNoInteractions` | [`VerificationTest`](src/test/java/com/example/guide/mockito/VerificationTest.java) |
+| 7 | [Spies (partial mocking)](docs/07-spies.md) | `@Spy`, `doReturn().when()`, mock vs. spy | [`SpyTest`](src/test/java/com/example/guide/mockito/SpyTest.java) |
+| 8 | [Advanced Mockito](docs/08-advanced-mockito.md) | Exceptions, consecutive returns, custom `Answer`, BDD style, static mocking | [`AdvancedMockingTest`](src/test/java/com/example/guide/advanced/AdvancedMockingTest.java) |
+| 9 | [Best practices & anti-patterns](docs/09-best-practices.md) | FIRST principles, what not to mock, naming, coverage traps | — |
+| 10 | [Git workflow for test changes](docs/10-git-workflow.md) | Branch-per-change, commit hygiene, running tests locally | — |
+| 11 | [Pull request guide](docs/11-pr-guide.md) | PR checklist, review etiquette, CI expectations | — |
+
+## The tutorial website
+
+`docs/*.md` is the single source of truth for content. The site under
+[trishala23.github.io/java-unit-testing-guide](https://trishala23.github.io/java-unit-testing-guide/)
+is generated from it by [`scripts/build_site.py`](scripts/build_site.py) —
+a dependency-light Python script (needs only the `markdown` package) that
+turns each chapter into a styled HTML page with sidebar navigation, an
+on-page table of contents, syntax-highlighted code, and light/dark themes.
+
+It rebuilds and redeploys automatically via
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml) on every push
+to `main` that touches `docs/`, `assets/`, or the build script — so editing
+a chapter's markdown is enough; there's nothing to hand-regenerate.
+
+To preview it locally:
+
+```bash
+pip install -r scripts/requirements.txt
+python scripts/build_site.py
+python -m http.server 8000 --directory _site
+# open http://localhost:8000
+```
+
+## Project structure
+
+```
+src/main/java/com/example/guide/
+  util/    Calculator, StringUtils          — dependency-free, for beginner tests
+  user/    User, UserRepository, UserService — single-dependency, for basic mocking
+  order/   Order + 4 collaborators, OrderService — multi-collaborator, for verification/spy/InOrder
+
+src/test/java/com/example/guide/
+  beginner/  Plain JUnit 5, no mocking
+  mockito/   Mocking styles, verification, spies
+  advanced/  Exceptions, static mocking, BDD style
+
+docs/        The numbered guide chapters above (source of truth for the tutorial site)
+assets/      CSS/JS/favicon for the tutorial site
+scripts/     build_site.py — renders docs/*.md into the static site
+.github/workflows/pages.yml   Builds & deploys the site to GitHub Pages on every push to main
+```
+
+## Running a single test class
+
+```bash
+mvn -Dtest=VerificationTest test
+```
+
+## Running tests by tag
+
+```bash
+mvn -Dgroups=fast test
+```
